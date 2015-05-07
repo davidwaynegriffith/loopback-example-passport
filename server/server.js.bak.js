@@ -1,18 +1,11 @@
-var loopback = require('loopback');
+wvar loopback = require('loopback');
 var boot = require('loopback-boot');
 var app = module.exports = loopback();
-
-
 
 // Passport configurators..
 var loopbackPassport = require('loopback-component-passport');
 var PassportConfigurator = loopbackPassport.PassportConfigurator;
 var passportConfigurator = new PassportConfigurator(app);
-
-
-
-
-
 
 /*
  * body-parser is a piece of express middleware that
@@ -35,10 +28,10 @@ var flash      = require('express-flash');
 // attempt to build the providers/passport config
 var config = {};
 try {
-    config = require('../providers.json');
+	config = require('../providers.json');
 } catch (err) {
-    console.trace(err);
-    process.exit(1); // fatal
+	console.trace(err);
+	process.exit(1); // fatal
 }
 
 // Set up the /favicon.ico
@@ -61,71 +54,34 @@ boot(app, __dirname);
 app.use(bodyParser.json());
 // to support URL-encoded bodies
 app.use(bodyParser.urlencoded({
-  extended: true
+	extended: true
 }));
 
 // The access token is only available after boot
-/*app.use(loopback.token({
+app.use(loopback.token({
   model: app.models.accessToken
 }));
-*/
-
-//sessions
-/*
-if (process.env.REDISTOGO_URL) {
-    
-    console.log('Connecting to redis:' + process.env.REDISTOGO_URL);
-    var rtg = require('url').parse(process.env.REDISTOGO_URL);
-    var redis = require('redis').createClient(rtg.port, rtg.hostname);
-    
-    redis.auth(rtg.auth.split(':')[1]);
-
-
-} else {
-
-  
-  var RedisStore = require('connect-redis')(loopback.session);
-
-var options = {
-    host: 'localhost',
-    port: 6379,
-    ttl: 1000,
-    disableTTL: true
-  };
-
-  app.use(loopback.session({
-      store: new RedisStore(options),
-      secret: 'Hello',
-      saveUninitialized: true,
-      resave: true
-
-  }));
-  console.log('Connecting to redis:' + options);
-}
-*/
 
 app.use(loopback.cookieParser(app.get('cookieSecret')));
 app.use(loopback.session({
-  secret: app.get('cookieSecret'),
-  saveUninitialized: true,
-  resave: true
+	secret: 'kitty',
+	saveUninitialized: true,
+	resave: true
 }));
-
-
 passportConfigurator.init();
 
 // We need flash messages to see passport errors
 app.use(flash());
 
 passportConfigurator.setupModels({
-  userModel: app.models.user,
-  userIdentityModel: app.models.userIdentity,
-  userCredentialModel: app.models.userCredential
+	userModel: app.models.user,
+	userIdentityModel: app.models.userIdentity,
+	userCredentialModel: app.models.userCredential
 });
 for (var s in config) {
-  var c = config[s];
-  c.session = c.session !== false;
-  passportConfigurator.configureProvider(s, c);
+	var c = config[s];
+	c.session = c.session !== false;
+	passportConfigurator.configureProvider(s, c);
 }
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
@@ -228,14 +184,14 @@ app.use(loopback.urlNotFound());
 app.use(loopback.errorHandler());
 
 app.start = function() {
-  // start the web server
-  return app.listen(function() {
-    app.emit('started');
-    console.log('Web server listening at: %s', app.get('url'));
-  });
+	// start the web server
+	return app.listen(function() {
+		app.emit('started');
+		console.log('Web server listening at: %s', app.get('url'));
+	});
 };
 
 // start the server if `$ node server.js`
 if (require.main === module) {
-  app.start();
+	app.start();
 }

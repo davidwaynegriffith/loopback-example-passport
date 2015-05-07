@@ -1,6 +1,26 @@
 {
   "db": {
     "name": "db",
-    "connector": "memory"
+    "connector": "memory",
+    "defaultForType": "db"
+  },
+
+  "mysqlx": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "database": "mfc",
+    "username": "root",
+    "password": "root",
+    "name": "mysql",
+    "connector": "mysql"
+  },
+  "mysql": {
+    "host": "us-cdbr-iron-east-02.cleardb.net",
+    "port": 3306,
+    "database": "heroku_9fda33760cf143e",
+    "username": "b8fdb8e8392ad4",
+    "password": "dfd97834",
+    "name": "mysqlx",
+    "connector": "mysql"
   }
 }
